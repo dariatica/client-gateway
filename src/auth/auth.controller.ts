@@ -9,8 +9,6 @@ export class AuthController {
 
   @Post()
   create(@Body() createAuthDto: CreateAuthDto) {
-    return {
-      createAuthDto,
-    };
+    return this.client.send({ cmd: 'createAuth' }, createAuthDto);
   }
 }
