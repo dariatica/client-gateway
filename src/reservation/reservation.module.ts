@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReservationController } from './reservation.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { NATS_SERVICE } from 'src/config/services';
+import { RMQ_SERVICE } from 'src/config/services';
 import { envs } from 'src/config/envs';
 
 @Module({
@@ -9,10 +9,11 @@ import { envs } from 'src/config/envs';
   imports: [
     ClientsModule.register([
       {
-        name: NATS_SERVICE,
-        transport: Transport.NATS,
+        name: RMQ_SERVICE,
+        transport: Transport.RMQ,
         options: {
-          servers: envs.nats_servers,
+          urls: envs.rmq_servers,
+          queue: 'reservations',
         },
       },
     ]),
