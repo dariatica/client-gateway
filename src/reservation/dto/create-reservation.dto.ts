@@ -8,5 +8,5 @@ export class CreateReservationDto {
   @Type(() => Date)
   appointment: Date;
   @IsString()
-  description: string;
+  email: string;
 }
