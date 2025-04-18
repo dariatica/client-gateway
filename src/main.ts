@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { envs } from './config/envs';
+import { RpcCustomExceptionFilter } from './common/exceptions/rpc-exception.filters';
 
 async function bootstrap() {
   const logger = new Logger('Client Gateway');
@@ -13,7 +14,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-
+  app.useGlobalFilters(new RpcCustomExceptionFilter());
   await app.listen(envs.port);
   logger.log('Client Gateway is up and running on port: ' + envs.port);
 }
