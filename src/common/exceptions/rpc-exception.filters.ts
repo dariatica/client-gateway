@@ -9,16 +9,29 @@ export class RpcCustomExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const { status, message } = exception.getError() as {
+    const rpc = exception.getError() as {
       status: number;
       message: string;
     };
-    console.log(status, message, 'error');
-    response.status(status).json({
-      statusCode: status,
+
+    if ('error' in rpc) {
+      const { message, status } = rpc.error as {
+        status: number;
+        message: string;
+      };
+      return response.status(status).json({
+        statusCode: status,
+        timestamp: new Date().toISOString(),
+        path: request.url,
+        message,
+      });
+    }
+
+    response.status(rpc.status).json({
+      statusCode: rpc.status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message,
+      message: rpc.message,
     });
   }
 }
